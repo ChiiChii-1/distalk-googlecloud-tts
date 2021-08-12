@@ -128,50 +128,6 @@ async def on_message(message):
     await client.process_commands(message)
 
 @client.event
-async def on_voice_state_update(member, before, after):
-    if before.channel is None:
-        if member.id == client.user.id:
-            presence = f'{prefix}ヘルプ | {len(client.voice_clients)}/{len(client.guilds)}サーバー'
-            await client.change_presence(activity=discord.Game(name=presence))
-        else:
-            if member.guild.voice_client is None:
-                await asyncio.sleep(0.5)
-                await after.channel.connect()
-            else:
-                if member.guild.voice_client.channel is after.channel:
-                    text = member.name + 'さんが入室しました'
-                    while member.guild.voice_client.is_playing():
-                        await asyncio.sleep(0.5)
-                    tts(text)
-                    source = discord.FFmpegPCMAudio('/tmp/message.mp3')
-                    member.guild.voice_client.play(source)
-    elif after.channel is None:
-        if member.id == client.user.id:
-            presence = f'{prefix}ヘルプ | {len(client.voice_clients)}/{len(client.guilds)}サーバー'
-            await client.change_presence(activity=discord.Game(name=presence))
-        else:
-            if member.guild.voice_client:
-                if member.guild.voice_client.channel is before.channel:
-                    if len(member.guild.voice_client.channel.members) == 1:
-                        await asyncio.sleep(0.5)
-                        await member.guild.voice_client.disconnect()
-                    else:
-                        text = member.name + 'さんが退室しました'
-                        while member.guild.voice_client.is_playing():
-                            await asyncio.sleep(0.5)
-                        tts(text)
-                        source = discord.FFmpegPCMAudio('/tmp/message.mp3')
-                        member.guild.voice_client.play(source)
-    elif before.channel != after.channel:
-        if member.guild.voice_client:
-            if member.guild.voice_client.channel is before.channel:
-                if len(member.guild.voice_client.channel.members) == 1 or member.voice.self_mute:
-                    await asyncio.sleep(0.5)
-                    await member.guild.voice_client.disconnect()
-                    await asyncio.sleep(0.5)
-                    await after.channel.connect()
-
-@client.event
 async def on_command_error(ctx, error):
     orig_error = getattr(error, 'original', error)
     error_msg = ''.join(traceback.TracebackException.from_exception(orig_error).format())
@@ -184,7 +140,11 @@ async def ヘルプ(ctx):
 {prefix}接続：ボイスチャンネルに接続します。
 {prefix}切断：ボイスチャンネルから切断します。'''
     await ctx.send(message)
-
+    
+@client.command()
+async def 読む(ctx):
+    await ctx.send('テキストチャンネルを【】に設定しました。')
+    
 def tts(message):
     synthesis_input = texttospeech.SynthesisInput(text=message)
     voice = texttospeech.VoiceSelectionParams(
