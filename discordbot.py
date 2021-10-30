@@ -9,7 +9,7 @@ from google.cloud import texttospeech
 
 prefix = os.getenv('DISCORD_BOT_PREFIX', default='$')
 tts_lang = os.getenv('DISCORD_BOT_LANG', default='ja-JP')
-tts_voice = os.getenv('DISCORD_BOT_VOICE', default='ja-JP-Wavenet-B')
+tts_voice = os.getenv('DISCORD_BOT_VOICE', default='ja-JP-Standard-B')
 token = os.environ['DISCORD_BOT_TOKEN']
 client = commands.Bot(command_prefix=prefix)
 
