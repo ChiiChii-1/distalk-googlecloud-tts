@@ -159,33 +159,7 @@ def tts(message):
     with open('/tmp/message.mp3', 'wb') as out:
         out.write(response.audio_content)
         
- @commands.Cog.listener()
-        if Item.text_channel is None: # 初期設定
-            # text channel選択画面出す
-            text_channels = message.guild.text_channels
-            await message.channel.send(
-                "読み上げるテキストチャンネルを選んでください",
-                view=SelectTextChannel(text_channels=text_channels[:5])
-            )
-
-            # voice channel選択画面出す
-            voice_channels = message.guild.voice_channels
-            await message.channel.send(
-                "ボイスチャンネルを選んでください",
-                view=SelectVoiceChannel(voice_channels=voice_channels[:5])
-            )
-        else:
-            # ここに読み上げの処理を書く
-            if not self.voice_client:
-                self.voice_client = await Item.voice_channel.connect()
-            if message.channel == Item.text_channel:
-                # 喋っている途中は待つ
-                while self.voice_client.is_playing():
-                    await asyncio.sleep(0.1)
-                print(message.content)
-                source = discord.FFmpegPCMAudio(text2wav(self.vcroid, message.content))
-                self.voice_client.play(source)
-        
+     
         
 
 
