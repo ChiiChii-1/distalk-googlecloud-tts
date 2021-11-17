@@ -159,10 +159,7 @@ def tts(message):
     with open('/tmp/message.mp3', 'wb') as out:
         out.write(response.audio_content)
         
-@commands.Cog.listener()
-    async def on_message(self, message: discord.Message):
-        if message.author.bot:  # bot自身のメッセージは何もしない
-            return
+ @commands.Cog.listener()
         if Item.text_channel is None: # 初期設定
             # text channel選択画面出す
             text_channels = message.guild.text_channels
